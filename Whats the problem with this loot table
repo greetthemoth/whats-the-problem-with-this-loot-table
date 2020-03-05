@@ -111,3 +111,149 @@
 		}
 	]
 }
+
+
+
+THIS IS THE WORKING CODE.
+Figured it out by checking out the oak sapling recipe,
+the problem was i had a alternative within an alternative which doesnt work.
+what i needed to do was create a separate pool and add the an 
+inverted condition so it doesnt work when silk touch is applied 
+(silk touch drop is already dropped from the first pool). 
+
+{
+   "type": "minecraft:block",
+   "pools": [
+      {
+         "rolls": 1,
+         "entries": [
+            {
+               "type": "minecraft:alternatives",
+               "children": [
+                  {
+                     "type": "minecraft:item",
+                     "conditions": [
+                        {
+                           "condition": "minecraft:match_tool",
+                           "predicate": {
+                              "enchantments": [
+                                 {
+                                    "enchantment": "minecraft:silk_touch",
+                                    "levels": {
+                                       "min": 1
+                                    }
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "name": "progressionmod:chert_block"
+                  },
+                  {
+                     "type": "minecraft:item",
+                     "functions": [
+                        {
+                           "function": "minecraft:set_count",
+                           "count": 2
+                        },
+                        {
+                           "function": "minecraft:apply_bonus",
+                           "enchantment": "minecraft:fortune",
+                           "formula": "minecraft:uniform_bonus_count",
+                           "parameters": {
+                              "bonusMultiplier": 1
+                           }
+                        },
+                        {
+                           "function": "minecraft:explosion_decay"
+                        }
+                     ],
+                     "name": "progressionmod:flint_shard"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "rolls": 1,
+         "entries": [
+            {
+               "type": "minecraft:alternatives",
+               "children": [
+                  {
+                     "type": "minecraft:item",
+                     "conditions": [
+                        {
+                           "condition": "random_chance",
+                           "chance": 0.3
+                        }
+                     ],
+                     "functions": [
+                        {
+                           "function": "minecraft:apply_bonus",
+                           "enchantment": "minecraft:fortune",
+                           "formula": "minecraft:uniform_bonus_count",
+                           "parameters": {
+                              "bonusMultiplier": 1
+                           }
+                        },
+                        {
+                           "function": "minecraft:explosion_decay"
+                        }
+                     ],
+                     "name": "minecraft:flint"
+                  },
+                  {
+                     "type": "minecraft:item",
+                     "functions": [
+                        {
+                           "function": "minecraft:set_count",
+                           "count": {
+                              "min": 1,
+                              "max": 2,
+                              "type": "minecraft:uniform"
+                           }
+                        },
+                        {
+                           "function": "minecraft:apply_bonus",
+                           "enchantment": "minecraft:fortune",
+                           "formula": "minecraft:uniform_bonus_count",
+                           "parameters": {
+                              "bonusMultiplier": 1
+                           }
+                        },
+                        {
+                           "function": "minecraft:explosion_decay"
+                        }
+                     ],
+                     "name": "progressionmod:flint_shard"
+                  }
+               ]
+            }
+         ],
+         "conditions": [
+            {
+               "condition": "minecraft:inverted",
+               "term": {
+                  "condition": "minecraft:alternative",
+                  "terms": [
+                     {
+                        "condition": "minecraft:match_tool",
+                        "predicate": {
+                           "enchantments": [
+                              {
+                                 "enchantment": "minecraft:silk_touch",
+                                 "levels": {
+                                    "min": 1
+                                 }
+                              }
+                           ]
+                        }
+                     }
+                  ]
+               }
+            }
+         ]
+      }
+   ]
+}
